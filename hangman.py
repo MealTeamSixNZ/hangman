@@ -3,6 +3,7 @@ dict={1:"hang", 2:"man", 3:"new", 4:"old", 5:"hangman"}
 random_num = random.randint(1,5)
 print(dict[random_num])
 
+
 # array with lines and what makes the hangman
 HANGMAN_PICS = ['''
   +---+
