@@ -1,8 +1,4 @@
 import random
-dict={1:"hang", 2:"man", 3:"new", 4:"old", 5:"hangman"}
-random_num = random.randint(1,5)
-print(dict[random_num])
-
 
 # array with lines and what makes the hangman
 HANGMAN_PICS = ['''
@@ -44,7 +40,7 @@ HANGMAN_PICS = ['''
 # function to display board
 wordList = "hang man new old hangman".split()
 
-def getRandomWords(wordList)
+def getRandomWord(wordList):
     wordIndex = random.randint(0, len(wordList) - 1)
     return wordList[wordIndex]
 
@@ -82,35 +78,39 @@ def playAgain():
     print('Do you want to play again? (yes or no)')
     return input().lower().startswith('y')
 
+print('Hangman')
+missedLetters = ''
+correctLetters = ''
+secretWord = getRandomWord(wordList)
+isGameEnd = False
 
-# CLI or GUI
-
-# user input with for loop
-'''
-guess = input("Take a guess! ")
-add guess letter to array of guessed?
-start guess counter at 0, add 1 each guess
-'''
-
-# implement error handling
-'''
-if guess = any of guessed db/array
-    print "That letter has already been guessed"
-
-allow only one character to be guessed
-
-allow only alphabet to be guessed
-'''
-
-# success and loss exit loop
-
-# guess counter & loss/win condition
-''' 
-def guess counter 
-if guess counter = 0  
-        print "Hanged Man!"
-    if guess counter =! 0 and complete guess = random word
-        print "Man was not hanged, well done!"
-'''
-# stats/record keeping
+while True:
+    displayBoard(missedLetters, correctLetters, secretWord)
+    guess = getGuess(missedLetters+correctLetters)
+    if guess in secretWord:
+        correctLetters = correctLetters + guess
+        isGameComplete = True
+        for i in range(len(secretWord)):
+            if secretWord[i] not in correctLetters:
+                isGameComplete = False
+                break
+        if isGameComplete:
+            print('Fin.')
+            isGameEnd = True
+    else: 
+        missedLetters = missedLetters + guess
+        if len(missedLetters) == len(HANGMAN_PICS) - 1:
+            displayBoard(missedLetters, correctLetters, secretWord)
+            print('You lose.')
+            isGameEnd = True
+    
+    if isGameEnd:
+        if playAgain():
+            missedLetters = ''
+            correctLetters = ''
+            secretWord = getRandomWord(wordList)
+            isGameEnd = False    
+        else:
+            print('Thanks for playing.')
+            break
 
