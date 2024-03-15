@@ -24,7 +24,7 @@ def getRandomWord(wordList, difficulty):
     return random.choice(filteredWords)
 
 difficulty = difficultyVar.get()
-secretWord = getRandomWord(wordList, difficulty)
+secretWord = getRandomWord(wordList, difficulty).lower()
 
 def getGuess(alreadyGuessed):
     while True:
@@ -75,17 +75,20 @@ def resetGame():
     missedLetters = ''
     correctLetters = ''
     difficulty = difficultyVar.get()
-    secretWord = getRandomWord(wordList, difficulty)
     isGameEnd = False
+    if not customWordVar.get():
+        secretWord = getRandomWord(wordList, difficulty).lower()
     for btn in letterButtons:
         btn.config(state=tk.NORMAL)
     resultLabel.config(text='')
+    customWordVar.set('')
     updateDisplay()
 
 def handleDifficultyChange():
     currentDifficulty = difficultyVar.get()
     difficultyLabel.config(text=f"The difficulty is: {currentDifficulty}")
     resetGame()
+
 
 wordDisplay = tk.Label(root, font=('Helvetica', 18))
 wordDisplay.pack()
@@ -109,6 +112,31 @@ hangmanLabel.pack()
 
 difficultyLabel = tk.Label(root, text=f"The difficulty is: {difficultyVar.get()}", font=('helvetica', 18))
 difficultyLabel.pack()
+
+
+customWordFrame = tk.Frame(root)
+customWordFrame.pack()
+
+customWordLabel = tk.Label(customWordFrame, text='Please enter custom word: ')
+customWordLabel.pack(side=tk.LEFT)
+
+customWordEntry = tk.Entry(customWordFrame)
+customWordEntry.pack(side=tk.LEFT)
+
+customWordVar = tk.StringVar()
+
+def startCustomGame():
+    global secretWord
+    enteredWord = customWordEntry.get().lower()
+    if 2 < len(enteredWord) <= 8:
+        secretWord = enteredWord
+        customWordVar.set(enteredWord)
+        resetGame()
+    else:
+        resultLabel.config(text="Invalid word. Enter a custom word 3 to 7 letters in length.")
+
+startCustomGameBtn = tk.Button(customWordFrame, text='Start Custom Game', command=startCustomGame)
+startCustomGameBtn.pack(side=tk.RIGHT)
 
 
 tk.Label(root, text="Select Difficulty:").pack()
